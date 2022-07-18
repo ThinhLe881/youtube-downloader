@@ -10,7 +10,8 @@ def clean_filename(name):
     return filename
 
 link = argv[1]
-
+if len(argv) > 2:
+    res = argv[2]
 
 yt = YouTube(link, use_oauth=True, allow_oauth_cache=True)
 print('Title: ' + yt.title)
@@ -19,6 +20,9 @@ print('Downloading...')
 dynamic_streams = ['2160p|160kbps', '1440p|160kbps', '1080p|160kbps', '720p|160kbps', '720p|128kbps', '480p|160kbps', '480p|128kbps']
 for ds in dynamic_streams:
     try:
+        if len(argv) > 2:
+            if ds.split('|')[0] != res:
+                continue
         yt.streams.filter(res=ds.split('|')[0], progressive=False).first().download(filename='video.mp4')
         yt.streams.filter(abr=ds.split('|')[1], progressive=False).first().download(filename='audio.mp3')
         break;
