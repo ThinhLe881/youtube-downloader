@@ -12,22 +12,21 @@ def clean_filename(name):
     return filename
 
 dest_path = argv[1]
-print(dest_path)
 link = argv[2]
-print(link)
 if len(argv) > 3:
     res = argv[3]
 
 yt = YouTube(link, use_oauth=True, allow_oauth_cache=True)
-print('Title: ' + yt.title)
 
+print('Title: ' + yt.title)
+print('Save as: ' + dest_path)
 print('Downloading...')
 
 vid_path = Path(__file__).parent / './video.mp4'
 aud_path = Path(__file__).parent / './audio.mp3'
+dynamic_streams = ['2160p|160kbps', '1440p|160kbps', '1080p|160kbps', '720p|160kbps', '720p|128kbps', '480p|160kbps', '480p|128kbps', '360p|160kbps', '360p|128kbps', '240p|160kbps', '240p|128kbps']
 
-dynamic_streams = ['2160p|160kbps', '1440p|160kbps', '1080p|160kbps', '720p|160kbps', '720p|128kbps', '480p|160kbps', '480p|128kbps']
-
+flag = False
 for ds in dynamic_streams:
     try:
         if len(argv) > 3:
@@ -35,14 +34,17 @@ for ds in dynamic_streams:
                 continue
         yt.streams.filter(res=ds.split('|')[0], progressive=False).first().download(filename=vid_path)
         yt.streams.filter(abr=ds.split('|')[1], progressive=False).first().download(filename=aud_path)
+        flag = True
         break
     except (Exception):
         continue
 
+if not flag:
+    print('No suitable stream found')
+    exit(1)
+
 video = ffmpeg.input(vid_path)
 audio = ffmpeg.input(aud_path)
-
 filename = dest_path + './' + clean_filename(yt.title) + '.mp4'
 ffmpeg.output(audio, video, filename).run()
-
-print('Done')
+print('Download complete')
