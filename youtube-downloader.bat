@@ -1,4 +1,4 @@
 @echo off
-set dest_dir=""
-cd /d ""
-python yt_downloader.py %dest_dir% %1 %2
+set dest_dir=" -the directory where the video will be downloaded to-"
+cd /d " -the directory of the python file- "
+python yt_downloader.py %dest_dir% %1

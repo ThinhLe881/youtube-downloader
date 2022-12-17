@@ -58,13 +58,14 @@ def download_video(yt, res):
 
 def save_video(yt, dest_path, vid_path, aud_path):
     print('Save as: ' + dest_path)
+    print('Saving...')
     try:
         video = ffmpeg.input(vid_path)
         audio = ffmpeg.input(aud_path)
         filename = rf'{dest_path}\{clean_filename(yt.title)}.mp4'
         stream = ffmpeg.output(audio, video, filename)
         ffmpeg.run(stream)
-        print('Done')
+        print('Finish')
     except:
         print('Can not save the video')
 
