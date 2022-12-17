@@ -53,11 +53,9 @@ def download_video(yt, res):
         print('No suitable audio stream found')
         exit(1)
 
-    print('Download complete')
     return vid_path, aud_path
 
 def save_video(yt, dest_path, vid_path, aud_path):
-    print('Save as: ' + dest_path)
     print('Saving...')
     try:
         video = ffmpeg.input(vid_path)
@@ -65,13 +63,14 @@ def save_video(yt, dest_path, vid_path, aud_path):
         filename = rf'{dest_path}\{clean_filename(yt.title)}.mp4'
         stream = ffmpeg.output(audio, video, filename)
         ffmpeg.run(stream)
+        print('Save as: ' + dest_path)
         print('Finish')
     except:
         print('Can not save the video')
 
 def main():
     parser = argparse.ArgumentParser(description='YouTube Video Downloader')
-    parser.add_argument('dest_path', metavar='dest_path', type=str, help='The destination folder')
+    parser.add_argument('dest_path', metavar='dest_path', type=str, help='The directory where the video will be downloaded to')
     parser.add_argument('link', metavar='link', type=str, help='The link to the YouTube video you want to download')
     parser.add_argument('--res', metavar='res', type=str, required=False, default='', help='The resolution of the YouTube video you want to download')
     args = parser.parse_args()
